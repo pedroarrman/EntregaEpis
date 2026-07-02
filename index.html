@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Entrega de EPIs</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f6f8;
+    color:#333;
+}
+
+header{
+    background:#2c3e50;
+    color:#fff;
+    padding:15px;
+}
+
+header h1{
+    font-size:24px;
+}
+
+nav{
+    margin-top:10px;
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:bold;
+    margin-right:20px;
+}
+
+nav a:hover{
+    text-decoration:underline;
+}
+
+main{
+    max-width:900px;
+    margin:20px auto;
+    padding:15px;
+}
+
+.card{
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    padding:20px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+input[type=text],
+input[type=date],
+select{
+    width:100%;
+    padding:12px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+}
+
+#listaEpis{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+    margin-top:15px;
+}
+
+#listaEpis label{
+    font-weight:normal;
+}
+
+canvas{
+    width:100%;
+    height:220px;
+    border:2px solid #999;
+    border-radius:6px;
+    background:#fff;
+    margin-top:10px;
+    touch-action:none;
+}
+
+.botones{
+    display:flex;
+    gap:15px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+button{
+    flex:1;
+    padding:14px;
+    font-size:16px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#btnLimpiar{
+    background:#f39c12;
+    color:white;
+}
+
+#btnEnviar{
+    background:#27ae60;
+    color:white;
+}
+
+@media(min-width:768px){
+
+#listaEpis{
+    grid-template-columns:1fr 1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Entrega de EPIs</h1>
+
+<nav>
+<a href="index.html">Nueva entrega</a>
+<a href="listado.html">Listado</a>
+</nav>
+
+</header>
+
+<main>
+
+<div class="card">
+
+
+<label>Nombre</label>
+<input type="text" id="nombre">
+
+<label>DNI</label>
+<input type="text" id="dni">
+
+<label>Fecha de entrega</label>
+<input type="date" id="fecha">
+
+<h3 style="margin-top:25px;">EPIs entregados</h3>
+
+<div id="listaEpis">
+
+<label><input type="checkbox" name="epi" value="BATA VERDE"> BATA VERDE</label>
+
+<label><input type="checkbox" name="epi" value="CALZADO SEGURIDAD"> CALZADO SEGURIDAD</label>
+
+<label><input type="checkbox" name="epi" value="CASCOS DE PROTECCION"> CASCOS DE PROTECCION</label>
+
+<label><input type="checkbox" name="epi" value="GORRA PELO"> GORRA PELO</label>
+
+<label><input type="checkbox" name="epi" value="GUANTE CUERO MARCA EN-388"> GUANTE CUERO MARCA EN-388</label>
+
+<label><input type="checkbox" name="epi" value="GUANTE NEOPRENO EN-374"> GUANTE NEOPRENO EN-374</label>
+
+<label><input type="checkbox" name="epi" value="GUANTE NITRIPOR GOMA EN-388"> GUANTE NITRIPOR GOMA EN-388</label>
+
+<label><input type="checkbox" name="epi" value="GUANTE WURTH GOMA EN-388 GRIS"> GUANTE WURTH GOMA EN-388 GRIS</label>
+
+<label><input type="checkbox" name="epi" value="GUANTE WURTH GOMA EN-388 MARRON"> GUANTE WURTH GOMA EN-388 MARRON</label>
+
+<label><input type="checkbox" name="epi" value="MASCARILLA QUIRURGICA"> MASCARILLA QUIRURGICA</label>
+
+<label><input type="checkbox" name="epi" value="MASCARILLA FPP2"> MASCARILLA FPP2</label>
+<label><input type="checkbox" name="epi" value="POLAR"> POLAR</label>
+
+<label><input type="checkbox" name="epi" value="TAPONES AUDITIVOS"> TAPONES AUDITIVOS</label>
+
+<label><input type="checkbox" name="epi" value="CHALECO ALTA VISIBILIDAD"> CHALECO ALTA VISIBILIDAD</label>
+
+<label><input type="checkbox" name="epi" value="PANTALÓN DE TRABAJO"> PANTALÓN DE TRABAJO</label>
+
+<label><input type="checkbox" name="epi" value="GUANTES DE NITILO"> GUANTES DE NITILO</label>
+
+<label><input type="checkbox" name="epi" value="BATA LABORATORIO"> BATA LABORATORIO</label>
+
+<label><input type="checkbox" name="epi" value="MANDIL IMPERMEABLE"> MANDIL IMPERMEABLE</label>
+
+<label><input type="checkbox" name="epi" value="CAMISETA GRIS"> CAMISETA GRIS</label>
+
+<label><input type="checkbox" name="epi" value="CAMISETA REFLECTANTE"> CAMISETA REFLECTANTE</label>
+
+</div>
+
+<h3 style="margin-top:25px;">Firma del trabajador</h3>
+
+<canvas id="canvas"></canvas>
+
+<div class="botones">
+
+<button type="button" id="btnLimpiar" onclick="limpiarFirma()">
+Limpiar firma
+</button>
+
+<button type="button" id="btnEnviar" onclick="enviarFormulario()">
+Enviar
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+function ajustarCanvas(){
+
+    const ratio=window.devicePixelRatio || 1;
+
+    canvas.width=canvas.offsetWidth*ratio;
+    canvas.height=220*ratio;
+
+    ctx.scale(ratio,ratio);
+
+}
+
+ajustarCanvas();
+
+window.addEventListener("resize",ajustarCanvas);
+
+let dibujando=false;
+
+canvas.addEventListener("mousedown",iniciar);
+canvas.addEventListener("mousemove",dibujar);
+canvas.addEventListener("mouseup",detener);
+canvas.addEventListener("mouseleave",detener);
+
+canvas.addEventListener("touchstart",iniciarTouch,{passive:false});
+canvas.addEventListener("touchmove",dibujarTouch,{passive:false});
+canvas.addEventListener("touchend",detener);
+
+function iniciar(){
+
+    dibujando=true;
+    ctx.beginPath();
+
+}
+
+function detener(){
+
+    dibujando=false;
+    ctx.beginPath();
+
+}
+
+function dibujar(e){
+
+    if(!dibujando)return;
+
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+
+    ctx.lineTo(e.offsetX,e.offsetY);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX,e.offsetY);
+
+}
+
+function iniciarTouch(e){
+
+    e.preventDefault();
+    dibujando=true;
+
+}
+
+function dibujarTouch(e){
+
+    e.preventDefault();
+
+    if(!dibujando)return;
+
+    const rect=canvas.getBoundingClientRect();
+
+    const x=e.touches[0].clientX-rect.left;
+    const y=e.touches[0].clientY-rect.top;
+
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+
+    ctx.lineTo(x,y);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+
+}
+
+function limpiarFirma(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+}
+// Fecha automática
+window.onload=function(){
+
+    const hoy=new Date();
+
+    const fecha=
+        hoy.getFullYear()+"-"+
+        String(hoy.getMonth()+1).padStart(2,"0")+"-"+
+        String(hoy.getDate()).padStart(2,"0");
+
+    document.getElementById("fecha").value=fecha;
+
+}
+
+//=====================================
+// URL DEL APPS SCRIPT
+//=====================================
+
+const API_URL="https://script.google.com/macros/s/AKfycbzBk3cCZnlFTZW-vrpI0bmNb0cEYSFyjYek0f4_HllZQo4hk5q3YMhg2VmZ8obJMVWt/exec";
+    
+//=====================================
+
+async function enviarFormulario(){
+
+    const empresa=document.getElementById("empresa").value.trim();
+    const nombre=document.getElementById("nombre").value.trim();
+    const dni=document.getElementById("dni").value.trim();
+    const fecha=document.getElementById("fecha").value;
+
+    const epis=[];
+
+    document
+        .querySelectorAll("input[name='epi']:checked")
+        .forEach(c=>epis.push(c.value));
+
+    if(empresa===""){
+        alert("Seleccione una empresa.");
+        return;
+    }
+
+    if(nombre===""){
+        alert("Introduzca el nombre.");
+        return;
+    }
+
+    if(dni===""){
+        alert("Introduzca el DNI.");
+        return;
+    }
+
+    if(epis.length===0){
+        alert("Seleccione al menos un EPI.");
+        return;
+    }
+
+    const datos={
+
+        empresa:empresa,
+        nombre:nombre,
+        dni:dni,
+        fecha:fecha,
+        epis:epis,
+        firma:canvas.toDataURL("image/png")
+
+    };
+
+    try{
+
+        const respuesta=await fetch(API_URL,{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(datos)
+
+        });
+
+        const resultado=await respuesta.text();
+
+        alert("Entrega registrada correctamente.");
+
+        document.getElementById("nombre").value="";
+        document.getElementById("dni").value="";
+
+        document
+            .querySelectorAll("input[name='epi']")
+            .forEach(c=>c.checked=false);
+
+        limpiarFirma();
+
+        const hoy=new Date();
+
+        document.getElementById("fecha").value=
+            hoy.getFullYear()+"-"+
+            String(hoy.getMonth()+1).padStart(2,"0")+"-"+
+            String(hoy.getDate()).padStart(2,"0");
+
+    }
+
+    catch(error){
+
+        alert("No se pudo conectar con el servidor.");
+
+        console.error(error);
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

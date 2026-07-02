@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Listado de Entregas</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f6f8;
+    color:#333;
+}
+
+header{
+    background:#2c3e50;
+    color:#fff;
+    padding:15px;
+}
+
+header h1{
+    font-size:24px;
+}
+
+nav{
+    margin-top:10px;
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:bold;
+    margin-right:20px;
+}
+
+nav a:hover{
+    text-decoration:underline;
+}
+
+main{
+    max-width:1200px;
+    margin:20px auto;
+    padding:15px;
+}
+
+.card{
+
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    padding:20px;
+
+}
+
+#estado{
+
+    margin-bottom:20px;
+    font-weight:bold;
+
+}
+
+button{
+
+    padding:12px 20px;
+    background:#27ae60;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom:20px;
+    font-size:16px;
+
+}
+
+button:hover{
+
+    background:#1f8a4d;
+
+}
+
+.tabla{
+
+    width:100%;
+    overflow-x:auto;
+
+}
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+
+}
+
+th{
+
+    background:#2c3e50;
+    color:white;
+    padding:12px;
+
+}
+
+td{
+
+    padding:10px;
+    border-bottom:1px solid #ddd;
+
+}
+
+tr:nth-child(even){
+
+    background:#f7f7f7;
+
+}
+
+@media(max-width:768px){
+
+header h1{
+
+    font-size:20px;
+
+}
+
+button{
+
+    width:100%;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Listado de Entregas de EPIs</h1>
+
+<nav>
+
+<a href="index.html">Nueva entrega</a>
+
+<a href="listado.html">Listado</a>
+
+</nav>
+
+</header>
+
+<main>
+
+<div class="card">
+
+<button onclick="cargarDatos()">
+
+Actualizar listado
+
+</button>
+
+<div id="estado">
+
+Cargando datos...
+
+</div>
+
+<div class="tabla">
+
+<table id="tabla">
+
+<thead>
+
+<tr>
+
+<th>Fecha</th>
+
+<th>Nombre</th>
+
+<th>DNI</th>
+
+<th>EPIs</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+// CAMBIAR POR TU URL
+
+const API_URL="https://script.google.com/macros/s/AKfycbzBk3cCZnlFTZW-vrpI0bmNb0cEYSFyjYek0f4_HllZQo4hk5q3YMhg2VmZ8obJMVWt/exec";
+
+async function cargarDatos(){
+
+    document.getElementById("estado").innerHTML="Cargando datos...";
+
+    try{
+
+        const respuesta=await fetch(API_URL);
+
+        const datos=await respuesta.json();
+
+        const tbody=document.querySelector("#tabla tbody");
+
+        tbody.innerHTML="";
+
+        // Si solo viene la cabecera
+        if(datos.length<=1){
+
+            document.getElementById("estado").innerHTML="No hay registros.";
+
+            return;
+
+        }
+
+        // Empezamos en la fila 1 porque la fila 0 son los encabezados
+        for(let i=1;i<datos.length;i++){
+
+            let fila=document.createElement("tr");
+
+            datos[i].forEach(valor=>{
+
+                let td=document.createElement("td");
+
+                td.textContent=valor;
+
+                fila.appendChild(td);
+
+            });
+
+            tbody.appendChild(fila);
+
+        }
+
+        document.getElementById("estado").innerHTML=
+
+            "Registros encontrados: "+(datos.length-1);
+
+    }
+
+    catch(error){
+
+        document.getElementById("estado").innerHTML="Error al cargar los datos.";
+
+        console.error(error);
+
+    }
+
+}
+
+cargarDatos();
+
+</script>
+
+</body>
+
+</html>
