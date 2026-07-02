@@ -210,60 +210,78 @@ Cargando datos...
 
 <script>
 
-const URL =
-"https://docs.google.com/spreadsheets/d/1iue2YWoY9qE_km5UGMxNRVEkf-tcHB-m53ZtfvbU9mw/gviz/tq?tqx=out:json&sheet=ENTREGAS_EPIS";
+const API_URL = "https://script.google.com/macros/s/AKfycbzBk3cCZnlFTZW-vrpI0bmNb0cEYSFyjYek0f4_HllZQo4hk5q3YMhg2VmZ8obJMVWt/exec";
 
-async function cargarDatos() {
+function cargarDatos(){
 
-const estado = document.getElementById("estado");
-const tbody = document.querySelector("#tabla tbody");
+    const estado = document.getElementById("estado");
+    const tbody = document.querySelector("#tabla tbody");
 
-estado.innerHTML = "Cargando datos...";
-tbody.innerHTML = "";
+    estado.innerHTML = "Cargando datos...";
+    tbody.innerHTML = "";
 
-try {
+    const callback = "cb_" + Date.now();
 
-const res = await fetch(URL);
-const text = await res.text();
+    let respondio = false;
 
-// limpiar wrapper Google
-const json = JSON.parse(text.substr(47).slice(0, -2));
+    window[callback] = function(res){
 
-const rows = json.table.rows;
+        respondio = true;
 
-if (!rows || rows.length === 0) {
-estado.innerHTML = "No hay datos";
-return;
-}
+        if(res.status !== "ok"){
+            estado.innerHTML = res.msg;
+            return;
+        }
 
-rows.forEach(r => {
+        const datos = res.data;
 
-const c = r.c;
+        for(let i=1;i<datos.length;i++){
 
-const fila = document.createElement("tr");
+            const fila = document.createElement("tr");
 
-fila.innerHTML = `
-<td>${c[0]?.v || ""}</td>
-<td>${c[1]?.v || ""}</td>
-<td>${c[2]?.v || ""}</td>
-<td>${c[3]?.v || ""}</td>
-`;
+            fila.innerHTML = `
+                <td>${datos[i][0]}</td>
+                <td>${datos[i][1]}</td>
+                <td>${datos[i][2]}</td>
+                <td>${datos[i][3]}</td>
+            `;
 
-tbody.appendChild(fila);
+            tbody.appendChild(fila);
 
-});
+        }
 
-estado.innerHTML = "Registros: " + rows.length;
+        estado.innerHTML = "Registros encontrados: " + (datos.length-1);
 
-} catch (e) {
-console.error(e);
-estado.innerHTML = "Error cargando datos";
-}
+        delete window[callback];
+
+        if(script.parentNode){
+            script.parentNode.removeChild(script);
+        }
+
+    };
+
+    const script = document.createElement("script");
+
+    script.src =
+        API_URL +
+        "?callback=" + callback +
+        "&action=list";
+
+    script.onerror = function(){
+
+        if(respondio) return;
+
+        estado.innerHTML = "Error de conexión";
+
+        delete window[callback];
+
+    };
+
+    document.body.appendChild(script);
 
 }
 
 cargarDatos();
-
 </script>
 
 </body>
